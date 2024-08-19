@@ -1,4 +1,12 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
+
+export interface Sensor extends Document {
+  bd: string;
+  name: string;
+  type: string;
+  location: string;
+  status: string;
+}
 
 export const SensorSchema = new Schema({
   bd: { type: String, required: true },

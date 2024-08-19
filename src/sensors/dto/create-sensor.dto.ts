@@ -1,4 +1,5 @@
 export class CreateSensorDto {
+  readonly _id: string;
   readonly bd: string;
   readonly name: string;
   readonly type: string;

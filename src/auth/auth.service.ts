@@ -51,4 +51,20 @@ export class AuthService {
 
     return { token };
   }
+
+  async findAll(): Promise<User[]> {
+    return this.userModel.find().exec();
+  }
+
+  async findOne(id: string): Promise<User> {
+    return this.userModel.findById(id).exec();
+  }
+  /*
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
+  }
+*/
+  async remove(id: string): Promise<User> {
+    return this.userModel.findByIdAndDelete(id).exec();
+  }
 }

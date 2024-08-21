@@ -32,6 +32,21 @@ export class AuthController {
     return this.authService.update(id, updateUserDto);
   }
 */
+  @Patch(':id/makeAdmin')
+  makeAdmin(
+    @Param('id') id: string,
+    @Body('superAdminId') superAdminId: string,
+  ) {
+    console.log(superAdminId);
+    return this.authService.makeAdmin(superAdminId, id);
+  }
+  @Patch(':id/makeUser')
+  makeUser(
+    @Param('id') id: string,
+    @Body('superAdminId') superAdminId: string,
+  ) {
+    return this.authService.makeUser(superAdminId, id);
+  }
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.authService.remove(id);

@@ -1,7 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from './schemas/user.schema';
+import { User, UserRole } from './schemas/user.schema';
 
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
@@ -47,7 +47,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const token = this.jwtService.sign({ id: user._id });
+    const token = this.jwtService.sign({ id: user._id ,role: user.role});
 
     return { token };
   }
@@ -66,5 +66,23 @@ export class AuthService {
 */
   async remove(id: string): Promise<User> {
     return this.userModel.findByIdAndDelete(id).exec();
+  }
+  async makeAdmin(superAdminId: string, userId: string): Promise<User> {
+    console.log('makeAdmin called with superAdminId:', superAdminId);
+    const superAdmin = await this.userModel.findById(superAdminId);
+
+    if (superAdmin.role !== ('superadmin' as UserRole)) {
+      console.log(superAdmin);
+      throw new ForbiddenException('Only a superadmin can perform this action');
+    }
+
+    const user = await this.userModel.findById(userId);
+    user.role = 'admin';
+    return user.save();
+  }
+  async makeUser(superAdminId: string, userId: string): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    user.role = 'user';
+    return user.save();
   }
 }

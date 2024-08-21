@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type UserRole = 'admin' | 'user';
+export type UserRole = 'admin' | 'superadmin' | 'user';
 
 @Schema({
   timestamps: true,

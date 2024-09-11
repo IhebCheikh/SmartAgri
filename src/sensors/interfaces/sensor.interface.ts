@@ -4,5 +4,6 @@ export interface Sensor {
   name: string;
   type: string;
   location: string;
-  status: string;
+  status: boolean;
+  userId: string;
 }

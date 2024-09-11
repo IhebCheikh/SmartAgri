@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Req,
+} from '@nestjs/common';
 import { SensorsService } from './sensors.service';
 import { CreateSensorDto } from './dto/create-sensor.dto';
 import { UpdateSensorDto } from './dto/update-sensor.dto';
@@ -10,7 +19,7 @@ export class SensorsController {
 
   @Post()
   create(@Body() createSensorDto: CreateSensorDto): Promise<Sensor> {
-    return this.sensorsService.create(createSensorDto);
+    return this.sensorsService.createSensor(createSensorDto);
   }
 
   @Get()
@@ -21,6 +30,18 @@ export class SensorsController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Sensor> {
     return this.sensorsService.findOne(id);
+  }
+  @Get('user')
+  getUserSensors(@Req() req) {
+    const userId = req.user._id;
+    return this.sensorsService.getUserSensors(userId);
+  }
+
+  @Post('/toggle-pump')
+  async togglePump(
+    @Body() { sensorId, status }: { sensorId: string; status: boolean },
+  ) {
+    return this.sensorsService.togglePump(sensorId, status);
   }
 
   @Put(':id')

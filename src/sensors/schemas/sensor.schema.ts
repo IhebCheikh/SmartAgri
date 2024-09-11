@@ -5,7 +5,8 @@ export interface Sensor extends Document {
   name: string;
   type: string;
   location: string;
-  status: string;
+  status: boolean;
+  userId: Schema.Types.ObjectId;
 }
 
 export const SensorSchema = new Schema({
@@ -13,7 +14,8 @@ export const SensorSchema = new Schema({
   name: { type: String, required: true },
   type: { type: String, required: true },
   location: { type: String, required: true },
-  status: { type: String, required: true },
+  status: { type: Boolean, required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 export const SensorDataSchema = new Schema({

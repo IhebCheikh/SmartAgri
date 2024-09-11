@@ -3,5 +3,5 @@ export class UpdateSensorDto {
   readonly name: string;
   readonly type: string;
   readonly location: string;
-  readonly status: string;
+  readonly status: boolean;
 }

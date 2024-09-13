@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema } from 'mongoose';
 import { Sensor } from './interfaces/sensor.interface';
 import { CreateSensorDto } from './dto/create-sensor.dto';
 import { SensorData } from './interfaces/sensor-data.interface';
-import { UpdateSensorDto } from './dto/update-sensor.dto';
 import { Types } from 'mongoose';
 
 @Injectable()
@@ -35,7 +34,7 @@ export class SensorsService {
     const createdSensor = new this.sensorModel(sensorData);
     return createdSensor.save();
   }
-  async createSensor(createSensorDto: CreateSensorDto): Promise<Sensor> {
+  async createSensor2(createSensorDto: CreateSensorDto): Promise<Sensor> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id, ...sensorData } = createSensorDto; // Exclure l'ID du DTO
 
@@ -51,7 +50,18 @@ export class SensorsService {
     const createdSensor = new this.sensorModel(sensorData);
     return createdSensor.save();
   }
+  async createSensor(createSensorDto: CreateSensorDto): Promise<Sensor> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...sensorData } = createSensorDto; // Exclure l'ID du DTO
 
+    // Assurez-vous que userId est bien une chaîne de caractères
+    if (sensorData.userId && typeof sensorData.userId !== 'string') {
+      throw new Error('Invalid user ID');
+    }
+
+    const createdSensor = new this.sensorModel(sensorData);
+    return createdSensor.save();
+  }
   async findAll(): Promise<Sensor[]> {
     return this.sensorModel.find().exec();
   }
@@ -59,9 +69,22 @@ export class SensorsService {
   async findOne(id: string): Promise<Sensor> {
     return this.sensorModel.findById(id).exec();
   }
+  async findByUser(userId: string): Promise<Sensor[]> {
+    return this.sensorModel.find({ userId }).exec();
+  }
 
   async getUserSensors(userId: string): Promise<Sensor[]> {
-    return this.sensorModel.find({ user: userId });
+    return this.sensorModel.find({ userId }).exec();
+  }
+  async getUserSensorss(userId: string): Promise<Sensor[]> {
+    try {
+      // Conversion de userId en ObjectId avant de l'utiliser dans la requête
+      const objectId = new Types.ObjectId(userId);
+
+      return this.sensorModel.find({ userId: objectId }).exec();
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to retrieve user sensors');
+    }
   }
 
   async update(id: string, sensorData: Partial<Sensor>): Promise<Sensor> {

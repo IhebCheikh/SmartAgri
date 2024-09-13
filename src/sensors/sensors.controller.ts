@@ -7,11 +7,15 @@ import {
   Put,
   Delete,
   Req,
+  UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { SensorsService } from './sensors.service';
 import { CreateSensorDto } from './dto/create-sensor.dto';
 import { UpdateSensorDto } from './dto/update-sensor.dto';
 import { Sensor } from './interfaces/sensor.interface';
+import { AuthGuard } from '@nestjs/passport';
+import { Types } from 'mongoose';
 
 @Controller('sensors')
 export class SensorsController {
@@ -31,10 +35,21 @@ export class SensorsController {
   findOne(@Param('id') id: string): Promise<Sensor> {
     return this.sensorsService.findOne(id);
   }
+
   @Get('user')
-  getUserSensors(@Req() req) {
-    const userId = req.user._id;
+  @UseGuards(AuthGuard('jwt'))
+  async getUserSensorssss(@Req() req): Promise<Sensor[]> {
+    const userId = req.user._id; // L'ID utilisateur extrait du token JWT
+    console.log('Retrieved User ID:', userId); // Affiche l'ID utilisateur dans les logs
+    if (!userId) {
+      throw new BadRequestException('User ID is not available');
+    }
     return this.sensorsService.getUserSensors(userId);
+  }
+
+  @Get('user/:userId')
+  async getUserSensors(@Param('userId') userId: string) {
+    return this.sensorsService.findByUser(userId);
   }
 
   @Post('/toggle-pump')

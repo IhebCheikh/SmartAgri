@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { SensorsModule } from './sensors/sensors.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -17,6 +18,10 @@ import { SensorsModule } from './sensors/sensors.module';
     ),
     AuthModule,
     SensorsModule,
+    JwtModule.register({
+      secret: 'yourSecretKey',
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

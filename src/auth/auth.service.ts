@@ -89,4 +89,7 @@ export class AuthService {
     user.role = 'user';
     return user.save();
   }
+  async findUserById(userId: string): Promise<User> {
+    return this.userModel.findById(userId).exec();
+  }
 }

@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignUpDto } from './dto/signup.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -50,5 +51,11 @@ export class AuthController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.authService.remove(id);
+  }
+  @Get('/connected-user')
+  @UseGuards(AuthGuard('jwt'))
+  getConnectedUser(@Req() req: Request) {
+    // @ts-ignore
+    return this.authService.findUserById(req.user._id);  // Renvoie les détails de l'utilisateur connecté
   }
 }

@@ -6,16 +6,12 @@ import {
   Param,
   Put,
   Delete,
-  Req,
-  UseGuards,
-  BadRequestException,
 } from '@nestjs/common';
 import { SensorsService } from './sensors.service';
 import { CreateSensorDto } from './dto/create-sensor.dto';
 import { UpdateSensorDto } from './dto/update-sensor.dto';
 import { Sensor } from './interfaces/sensor.interface';
-import { AuthGuard } from '@nestjs/passport';
-import { Types } from 'mongoose';
+import { SensorData } from './interfaces/sensor-data.interface';
 
 @Controller('sensors')
 export class SensorsController {
@@ -40,12 +36,9 @@ export class SensorsController {
   async getUserSensors(@Param('userId') userId: string) {
     return this.sensorsService.findByUser(userId);
   }
-
-  @Post('/toggle-pump/:sensorId')
-  async togglePumps(
-    @Body() { sensorId, status }: { sensorId: string; status: boolean },
-  ) {
-    return this.sensorsService.togglePump(sensorId, status);
+  @Get('/data/:sensorId')
+  async getSensorData(@Param('sensorId') sensorId: string): Promise<SensorData[]> {
+    return this.sensorsService.getSensorData(sensorId);
   }
   @Post('toggle-pump/:sensorId')
   async togglePump(

@@ -1,10 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema } from 'mongoose';
+import { Model } from 'mongoose';
 import { Sensor } from './interfaces/sensor.interface';
 import { CreateSensorDto } from './dto/create-sensor.dto';
 import { SensorData } from './interfaces/sensor-data.interface';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class SensorsService {
@@ -41,11 +40,9 @@ export class SensorsService {
   async findByUser(userId: string): Promise<Sensor[]> {
     return this.sensorModel.find({ userId }).exec();
   }
-
-  async getUserSensors(userId: string): Promise<Sensor[]> {
-    return this.sensorModel.find({ userId }).exec();
+  async getSensorData(sensorId: string): Promise<SensorData[]> {
+    return this.sensorDataModel.find({ sensorId }).exec();
   }
-
   async update(id: string, sensorData: Partial<Sensor>): Promise<Sensor> {
     try {
       const updatedSensor = await this.sensorModel.findByIdAndUpdate(

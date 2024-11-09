@@ -14,7 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      'mongodb+srv://iheb:kZBTzoclQGexgNfR@cluster0.eja8elm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+      'mongodb+srv://iheb:iheb@cluster0.eja8elm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
     ),
     AuthModule,
     SensorsModule,

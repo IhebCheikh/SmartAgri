@@ -1,0 +1,31 @@
+import { Body, Controller, Get, Post, Patch, Param, Delete } from "@nestjs/common";
+import { SensorRequestsService } from './sensorRequests.service';
+
+@Controller('sensor-requests')
+export class SensorRequestsController {
+  constructor(private readonly sensorRequestsService: SensorRequestsService) {}
+
+  @Post()
+  create(@Body() requestData: any) {
+    return this.sensorRequestsService.createRequest(requestData);
+  }
+
+  @Get()
+  findAll() {
+    return this.sensorRequestsService.findAll();
+  }
+  @Get(':userId')
+  async getUserSensors(@Param('userId') userId: string) {
+    return this.sensorRequestsService.findByUser(userId);
+  }
+
+  @Patch(':id')
+  updateStatus(@Param('id') id: string, @Body() updateData: { status: string }) {
+    console.log(updateData);
+    return this.sensorRequestsService.updateStatus(id, updateData.status);
+  }
+  @Delete(':id')
+  deleteRequest(@Param('id') id: string) {
+    return this.sensorRequestsService.deleteRequest(id);
+  }
+}

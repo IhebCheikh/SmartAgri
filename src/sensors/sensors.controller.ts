@@ -95,13 +95,13 @@ export class SensorsController {
 
     // Étape 3 : Appeler le service de détection d'anomalies
     const anomalyResult = await this.sensorsService.detectAnomaly(dataToDetect);
-    console.log('anomalyResult', anomalyResult);
+    //console.log('anomalyResult', anomalyResult);
     // Récupérer la première clé de l'objet
     const firstKey = Object.keys(anomalyResult)[0];
 
     // Récupérer la valeur associée à la première clé
     const anomalies = anomalyResult[firstKey];
-    console.log('anomalies', anomalies);
+    //console.log('anomalies', anomalies);
 
     // Étape 4 : Associer les anomalies aux capteurs correspondants
     sensorsWithData.forEach((sensorData, index) => {

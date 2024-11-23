@@ -6,7 +6,8 @@ import { SensorRequest } from './schemas/sensorRequest.schema';
 @Injectable()
 export class SensorRequestsService {
   constructor(
-    @InjectModel(SensorRequest.name) private readonly sensorRequestModel: Model<SensorRequest>,
+    @InjectModel(SensorRequest.name)
+    private readonly sensorRequestModel: Model<SensorRequest>,
   ) {}
 
   async createRequest(requestData: any) {
@@ -23,10 +24,36 @@ export class SensorRequestsService {
     return this.sensorRequestModel.find({ userId }).exec();
   }
   async updateStatus(id: string, status: string) {
-    const request = await this.sensorRequestModel.findByIdAndUpdate(id, { status }, { new: true }).exec();
+    const request = await this.sensorRequestModel
+      .findByIdAndUpdate(id, { status }, { new: true })
+      .exec();
     if (!request) {
       throw new NotFoundException(`Request with ID ${id} not found`);
     }
+    return request;
+  }
+  async updateRequest(
+    id: string,
+    updateData: Partial<SensorRequest>,
+  ): Promise<SensorRequest> {
+    const allowedFields = ['name', 'type', 'location'];
+
+    // Filtrer uniquement les champs autorisés pour la mise à jour
+    const filteredData = Object.keys(updateData)
+      .filter((key) => allowedFields.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = updateData[key];
+        return obj;
+      }, {});
+
+    const request = await this.sensorRequestModel
+      .findByIdAndUpdate(id, filteredData, { new: true })
+      .exec();
+
+    if (!request) {
+      throw new NotFoundException(`Request with ID ${id} not found`);
+    }
+
     return request;
   }
 

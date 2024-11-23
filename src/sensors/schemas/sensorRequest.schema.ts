@@ -9,6 +9,9 @@ export class SensorRequest extends Document {
   @Prop({ required: true })
   name: string;
 
+  @Prop()
+  username: string;
+
   @Prop({ required: true })
   location: string;
 

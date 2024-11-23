@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Patch, Param, Delete } from "@nestjs/common";
 import { SensorRequestsService } from './sensorRequests.service';
+import { SensorRequest } from "./schemas/sensorRequest.schema";
 
 @Controller('sensor-requests')
 export class SensorRequestsController {
@@ -23,6 +24,13 @@ export class SensorRequestsController {
   updateStatus(@Param('id') id: string, @Body() updateData: { status: string }) {
     console.log(updateData);
     return this.sensorRequestsService.updateStatus(id, updateData.status);
+  }
+  @Patch('update/:id')
+  async updateRequest(
+    @Param('id') id: string,
+    @Body() updateData: Partial<SensorRequest>
+  ): Promise<SensorRequest> {
+    return this.sensorRequestsService.updateRequest(id, updateData);
   }
   @Delete(':id')
   deleteRequest(@Param('id') id: string) {

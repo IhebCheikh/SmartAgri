@@ -31,7 +31,11 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const token = this.jwtService.sign({ id: user._id, name: user.name,role: user.role});
+    const token = this.jwtService.sign({
+      id: user._id,
+      name: user.name,
+      role: user.role,
+    });
 
     return { token };
   }
@@ -40,7 +44,7 @@ export class AuthService {
     const { email, password } = loginDto;
 
     const user = await this.userModel.findOne({ email });
-
+    console.log(user)
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -51,7 +55,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const token = this.jwtService.sign({ id: user._id,  name: user.name,role: user.role });
+    const token = this.jwtService.sign({
+      id: user._id,
+      name: user.name,
+      role: user.role,
+    });
 
     return { token };
   }
